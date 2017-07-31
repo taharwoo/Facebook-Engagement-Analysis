@@ -1,0 +1,13 @@
+#Refine Data
+comments <- sapply(j$data, function(j) {list(comment=j$message)})
+cleaned_comments <- sapply(comments, function(x) iconv(enc2utf8(x), sub = "byte"))
+my_corpus <- Corpus(VectorSource(cleaned_comments))
+my_function <- content_transformer(function (x, pattern) gsub(pattern, "", x))
+my_cleaned_corpus <- tm_map(my_corpus, my_function, "/")
+my_cleaned_corpus <- tm_map(my_cleaned_corpus, my_function, "@")
+my_cleaned_corpus <- tm_map(my_cleaned_corpus, my_function, "//|")
+my_cleaned_corpus <- tm_map(my_cleaned_corpus, my_function, "�")
+my_cleaned_corpus <- tm_map(my_cleaned_corpus, my_function, "ó")
+my_cleaned_corpus <- tm_map(my_cleaned_corpus, content_transformer(tolower))
+my_cleaned_corpus <- tm_map(my_cleaned_corpus, removePunctuation)
+my_cleaned_corpus <- tm_map(my_cleaned_corpus, stripWhitespace)
